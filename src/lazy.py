@@ -14,11 +14,15 @@ def lazy_load(fullname: str) -> ModuleType:
     return module
 
 LAZY_MODULES = [
+    "science",
+    "science.pack",
     "science.pack.slow",
     "science.pack.junk",
 ]
 
 
 def setup_lazy_load():
+    print("Setting up lazy loading for modules:")
     for module in LAZY_MODULES:
-        lazy_load(module)
+        print(f"  {module}")
+        sys.modules[module] = lazy_load(module)

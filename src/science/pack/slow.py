@@ -14,7 +14,7 @@ class Slow():
         return 42000
 
 
-print("Slowly initializing slow science stuff")
+print("Initializing science.pack.slow")
 for _ in tqdm(range(20)):
     time.sleep(0.1)
-print("Slow science stuff initialized")
+print("Done initializing science.pack.slow")

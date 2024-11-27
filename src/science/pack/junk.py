@@ -14,7 +14,7 @@ class Junk():
         return 42
 
 
-print("Slowly initializing science Junk")
+print("Initializing science.pack.junk")
 for _ in tqdm(range(10)):
     time.sleep(0.1)
-print("Science Junk initialized")
+print("Done initializing science.pack.junk")
