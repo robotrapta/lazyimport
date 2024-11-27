@@ -1,4 +1,4 @@
-from mylib import MyLib
+from app.mylib import MyLib
 
 
 if __name__ == "__main__":

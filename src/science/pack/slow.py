@@ -10,6 +10,9 @@ class Slow():
         time.sleep(5)
         print("Hello, Slow!")
 
+    def number(self) -> int:
+        return 42000
+
 
 print("Slowly initializing slow science stuff")
 for _ in tqdm(range(20)):

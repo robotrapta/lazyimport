@@ -10,6 +10,9 @@ class Junk():
         time.sleep(5)
         print("Hello, Junk!")
 
+    def number(self) -> int:
+        return 42
+
 
 print("Slowly initializing science Junk")
 for _ in tqdm(range(10)):

@@ -5,4 +5,4 @@ cd src
 
 set -ex
 
-python app/go.py
+python go_app.py
