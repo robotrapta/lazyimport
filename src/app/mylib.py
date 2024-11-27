@@ -1,10 +1,10 @@
 from science.pack.slow import Slow
-from science.pack.junk import Junk
+import science.pack.junk 
 
 class SciApp():
     def __init__(self):
         self.slow = Slow()
-        self.junk = Junk()
+        self.junk = science.pack.junk.Junk()
 
     def hello(self):
         print("Science app says Hi")
