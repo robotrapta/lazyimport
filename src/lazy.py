@@ -34,7 +34,7 @@ def setup_lazy_load():
     print("Setting up lazy loading for modules:")
     for module in LAZY_MODULES:
         print(f"  {module}")
-        sys.modules[module] = setup_lazyload_module(module)
+        setup_lazyload_module(module)
 
     print("\n\nModules after lazy loading:")
     show_modules()

@@ -54,7 +54,7 @@ class LazyObject:
         return getattr(self._real_object, name)
 
 
-def setup_lazyload_module(fullname: str) -> ModuleType:
+def setup_lazyload_module(fullname: str):
     """
     Create an entry in sys.modules for a module that we don't want to load until
     it is accessed.
@@ -62,30 +62,39 @@ def setup_lazyload_module(fullname: str) -> ModuleType:
     Args:
         fullname (str): The full name of the module to be lazily loaded.
 
-    Returns:
-        ModuleType: A proxy module that delays loading.
+    Example:
+        setup_lazyload_module("science.pack.slow")
+
+    After calling setup_lazyload_module("science.pack.slow") you can do:
+        import science.pack.slow  # won't actually load the module
+    And even:
+        from science.pack.slow import Something
+    Which _still_ doesn't load the module.  But as soon as you call `Something()`
+    then it will load the module and return the result.
     """
     try:
-        return sys.modules[fullname]
+        _ = sys.modules[fullname]
     except KeyError:
-        spec = importlib.util.find_spec(fullname)
-        module = importlib.util.module_from_spec(spec)
-        loader = importlib.util.LazyLoader(spec.loader)
-        module.__loader__ = loader
-        sys.modules[fullname] = module
-        
-        # Add __getattr__ to handle "from ... import ..." statements
-        def __getattr__(name):
-            """
-            Get an attribute from the module, returning a LazyObject if necessary.
+        pass
 
-            Args:
-                name (str): The name of the attribute.
+    spec = importlib.util.find_spec(fullname)
+    module = importlib.util.module_from_spec(spec)
+    loader = importlib.util.LazyLoader(spec.loader)
+    module.__loader__ = loader
+    sys.modules[fullname] = module
+    
+    # Add __getattr__ to handle "from ... import ..." statements
+    def __getattr__(name):
+        """
+        Get an attribute from the module, returning a LazyObject if necessary.
 
-            Returns:
-                LazyObject: A proxy object for the attribute.
-            """
-            return LazyObject(fullname, name)
-        
-        module.__getattr__ = __getattr__
-        return module
+        Args:
+            name (str): The name of the attribute.
+
+        Returns:
+            LazyObject: A proxy object for the attribute.
+        """
+        return LazyObject(fullname, name)
+    
+    module.__getattr__ = __getattr__
+    sys.modules[fullname] = module
