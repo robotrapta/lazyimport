@@ -23,6 +23,7 @@ class LazyObject:
         """Load the real object from the module if it hasn't been loaded yet."""
         if self._real_object is None:
             module = sys.modules[self._module_name]
+            # Now actually load the module by calling the loader
             module.__loader__.exec_module(module)
             self._real_object = getattr(module, self._attr_name)
 
@@ -54,6 +55,20 @@ class LazyObject:
         return getattr(self._real_object, name)
 
 
+def _get_lazy_object(fullname, name) -> LazyObject:
+    """
+    Get an attribute from the module, returning a LazyObject if necessary.
+
+    Args:
+        fullname (str): The full name of the module.
+        name (str): The name of the attribute.
+
+    Returns:
+        LazyObject: A proxy object for the attribute.
+    """
+    return LazyObject(fullname, name)
+
+
 def setup_lazyload_module(fullname: str):
     """
     Create an entry in sys.modules for a module that we don't want to load until
@@ -75,6 +90,7 @@ def setup_lazyload_module(fullname: str):
     try:
         _ = sys.modules[fullname]
     except KeyError:
+        # It's not already loaded, so we need to set up the proxy module.
         pass
 
     spec = importlib.util.find_spec(fullname)
@@ -84,17 +100,5 @@ def setup_lazyload_module(fullname: str):
     sys.modules[fullname] = module
     
     # Add __getattr__ to handle "from ... import ..." statements
-    def __getattr__(name):
-        """
-        Get an attribute from the module, returning a LazyObject if necessary.
-
-        Args:
-            name (str): The name of the attribute.
-
-        Returns:
-            LazyObject: A proxy object for the attribute.
-        """
-        return LazyObject(fullname, name)
-    
-    module.__getattr__ = __getattr__
+    module.__getattr__ = lambda name: _get_lazy_object(fullname, name)
     sys.modules[fullname] = module
