@@ -1,4 +1,5 @@
-from science.pack.slow import Slow  # this doesn't work
+# Try two different ways to import the modules
+from science.pack.slow import Slow
 import science.pack.junk 
 
 class SciApp():
