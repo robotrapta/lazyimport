@@ -9,8 +9,9 @@ def lazy_load(fullname: str) -> ModuleType:
     spec = importlib.util.find_spec(fullname)
     module = importlib.util.module_from_spec(spec)
     loader = importlib.util.LazyLoader(spec.loader)
-    # Make module with proper locking and get it inserted into sys.modules.
-    loader.exec_module(module)
+    # Instead of executing the module now, just set the loader
+    module.__loader__ = loader
+    sys.modules[fullname] = module
     return module
 
 LAZY_MODULES = [
