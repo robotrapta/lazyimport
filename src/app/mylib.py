@@ -1,5 +1,4 @@
-# from science.pack.slow import Slow  # this doesn't work
-import science.pack.slow
+from science.pack.slow import Slow  # this doesn't work
 import science.pack.junk 
 
 class SciApp():
