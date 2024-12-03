@@ -89,6 +89,7 @@ def setup_lazyload_module(fullname: str):
     """
     try:
         _ = sys.modules[fullname]
+        return
     except KeyError:
         # It's not already loaded, so we need to set up the proxy module.
         pass
